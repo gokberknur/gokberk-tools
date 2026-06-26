@@ -1,0 +1,50 @@
+/*
+ * Store-global styles. Everything reads --gok-* semantic role tokens — never a
+ * hardcoded hex, px, radius, or easing. The design system's foundation CSS
+ * (fonts → tokens → typography → layout) is imported in +layout.svelte; this
+ * file holds only store-wide layout glue on top of it.
+ */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	background: var(--gok-color-bg);
+	color: var(--gok-color-text);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+body {
+	margin: 0;
+	min-block-size: 100dvh;
+	font-family: var(--gok-type-body-regular-family);
+	font-size: var(--gok-type-body-regular-size);
+	line-height: var(--gok-type-body-regular-line);
+}
+
+/* The app shell: sticky chrome, content fills, footer sinks to the bottom. */
+.app {
+	display: flex;
+	flex-direction: column;
+	min-block-size: 100dvh;
+}
+
+.app__main {
+	flex: 1 1 auto;
+}
+
+/* Respect the brand's quiet-motion principle for anyone who asks for less. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
