@@ -1,0 +1,15 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": ["config:recommended"],
+	"labels": ["dependencies"],
+	"packageRules": [
+		{
+			"description": "Surface every design-system release as its own PR so the consumer CI runs against it.",
+			"matchPackageNames": ["@gokberknur/design-system"],
+			"groupName": "design system",
+			"labels": ["design-system"],
+			"schedule": ["at any time"],
+			"prCreation": "immediate"
+		}
+	]
+}
