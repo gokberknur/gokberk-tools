@@ -42,7 +42,7 @@
 <svelte:head><title>{product ? `${product.name} — gökberk tools` : 'Tool not found'}</title></svelte:head>
 
 {#if !product}
-	<section class="gok-container missing">
+	<section class="band__inner missing">
 		<gok-empty-state>
 			<p class="gok-headline-4">We couldn't find that tool.</p>
 			<p slot="actions">
@@ -52,7 +52,7 @@
 		</gok-empty-state>
 	</section>
 {:else}
-	<div class="pdp gok-container">
+	<div class="pdp band__inner">
 		<gok-breadcrumb label="Breadcrumb">
 			<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 			<gok-breadcrumb-item href="/catalog">Catalog</gok-breadcrumb-item>
@@ -71,6 +71,7 @@
 			<div class="info">
 				<p class="gok-eyebrow">{product.line}</p>
 				<h1 class="gok-headline-2">{product.name}</h1>
+				<p class="pdp__code">{product.articleCode}</p>
 
 				<div class="price-row">
 					<span class="price gok-headline-4 gok-tabular-nums">
@@ -145,25 +146,32 @@
 			</gok-tab-panel>
 
 			<gok-tab-panel value="specs">
-				<dl class="specs">
-					{#each product.specs as spec (spec.label)}
-						<div class="specs__row">
-							<dt>
-								{spec.label}
-								{#if spec.label === 'Grade'}
-									<gok-tooltip placement="top">
-										<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-										<button class="info-btn" type="button" aria-label="What is a grade?">
-											<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></svg>
-										</button>
-										<span slot="content">A grade pairs a carbide substrate with a coating, tuned to a material and operation.</span>
-									</gok-tooltip>
-								{/if}
-							</dt>
-							<dd class="gok-tabular-nums">{spec.value}</dd>
-						</div>
+				<div class="specs">
+					{#each product.specs as group (group.heading)}
+						<section class="specs__group">
+							<h3 class="gok-eyebrow specs__heading">{group.heading}</h3>
+							<dl class="specs__list">
+								{#each group.rows as spec (spec.label)}
+									<div class="specs__row">
+										<dt>
+											{spec.label}
+											{#if spec.label === 'Grade'}
+												<gok-tooltip placement="top">
+													<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+													<button class="info-btn" type="button" aria-label="What is a grade?">
+														<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></svg>
+													</button>
+													<span slot="content">A grade pairs a carbide substrate with a coating, tuned to a material and operation.</span>
+												</gok-tooltip>
+											{/if}
+										</dt>
+										<dd class="gok-tabular-nums">{spec.value}</dd>
+									</div>
+								{/each}
+							</dl>
+						</section>
 					{/each}
-				</dl>
+				</div>
 			</gok-tab-panel>
 
 			<gok-tab-panel value="compat">
@@ -244,6 +252,14 @@
 		margin-block: var(--gok-space-100) 0;
 	}
 
+	.pdp__code {
+		margin: 0;
+		font-family: var(--gok-font-family-mono);
+		font-size: var(--gok-type-body-small-size);
+		line-height: var(--gok-type-body-small-line);
+		color: var(--gok-color-text-muted);
+	}
+
 	.price-row {
 		display: flex;
 		align-items: center;
@@ -318,8 +334,23 @@
 	}
 
 	.specs {
-		margin: 0;
+		display: grid;
+		gap: var(--gok-space-600);
 		max-inline-size: 40rem;
+	}
+
+	.specs__group {
+		display: grid;
+		gap: var(--gok-space-200);
+	}
+
+	.specs__heading {
+		margin: 0 0 var(--gok-space-100);
+		color: var(--gok-color-text-muted);
+	}
+
+	.specs__list {
+		margin: 0;
 	}
 
 	.specs__row {

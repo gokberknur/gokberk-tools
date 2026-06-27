@@ -67,7 +67,7 @@
 
 <svelte:head><title>Checkout — gökberk tools</title></svelte:head>
 
-<div class="checkout gok-container">
+<div class="checkout band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item href="/cart">Cart</gok-breadcrumb-item>
@@ -208,8 +208,9 @@
 
 	.layout {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) 20rem;
-		gap: var(--gok-space-700);
+		grid-template-columns: minmax(0, 40rem) minmax(0, 22rem);
+		justify-content: start;
+		gap: clamp(var(--gok-space-700), 6vw, var(--gok-space-900));
 		align-items: start;
 	}
 

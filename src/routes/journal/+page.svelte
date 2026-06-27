@@ -4,7 +4,7 @@
 
 <svelte:head><title>Journal — gökberk tools</title></svelte:head>
 
-<div class="journal gok-container">
+<div class="journal band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item>Journal</gok-breadcrumb-item>

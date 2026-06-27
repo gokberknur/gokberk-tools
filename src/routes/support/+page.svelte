@@ -4,7 +4,7 @@
 
 <svelte:head><title>Support — gökberk tools</title></svelte:head>
 
-<div class="support gok-container">
+<div class="support band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item>Support</gok-breadcrumb-item>

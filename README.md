@@ -49,4 +49,4 @@ npm install` to return to the published package.
 ## Related
 
 - Design system package: <https://www.npmjs.com/package/@gokberknur/design-system>
-- Studio: <https://gokberk.se>
+- Home: <https://gokberk.se>

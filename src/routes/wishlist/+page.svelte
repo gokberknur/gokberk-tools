@@ -11,7 +11,7 @@
 
 <svelte:head><title>Saved — gökberk tools</title></svelte:head>
 
-<div class="wishlist gok-container">
+<div class="wishlist band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item>Saved</gok-breadcrumb-item>
