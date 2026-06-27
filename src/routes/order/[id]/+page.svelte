@@ -34,7 +34,7 @@
 
 <svelte:head><title>{order ? `Order ${order.id} — gökberk tools` : 'Order not found'}</title></svelte:head>
 
-<div class="order gok-container">
+<div class="order band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item href="/account">Account</gok-breadcrumb-item>

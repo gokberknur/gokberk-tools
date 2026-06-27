@@ -8,7 +8,7 @@
 
 <svelte:head><title>{post ? `${post.title} — gökberk tools` : 'Post not found'}</title></svelte:head>
 
-<div class="post-page gok-container">
+<div class="post-page band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item href="/journal">Journal</gok-breadcrumb-item>

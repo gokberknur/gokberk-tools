@@ -3,7 +3,7 @@
 	import '@gokberknur/design-system/standalone.css';
 	import '$lib/gok';
 	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
+	import { goto, onNavigate } from '$app/navigation';
 	import { cart } from '$lib/state/cart.svelte';
 	import { wishlist } from '$lib/state/wishlist.svelte';
 	import { density } from '$lib/state/density.svelte';
@@ -12,7 +12,20 @@
 
 	let { children } = $props();
 
-	let q = $state('');
+	// Drive the native View Transitions API on every client navigation. The crossfade
+	// + rise and the reduced-motion fallback live in app.css; this hook just brackets
+	// the DOM swap, and no-ops where the API is unsupported.
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
+
 	let cartOpen = $state(false);
 
 	const section = $derived.by(() => {
@@ -22,12 +35,6 @@
 		if (path.startsWith('/support')) return 'support';
 		return '';
 	});
-
-	function handleSearch(e: SubmitEvent) {
-		e.preventDefault();
-		const term = q.trim();
-		goto(term ? `/catalog?q=${encodeURIComponent(term)}` : '/catalog');
-	}
 
 	function handleMenu(e: Event) {
 		const v = (e as CustomEvent).detail?.value;
@@ -56,34 +63,20 @@
 </script>
 
 <div class="app">
+	<div class="announce" data-theme="dark">
+		<p class="announce__text band__inner">
+			Free shipping on contract orders over $2,500<span class="announce__extra">
+				· order before 14:00 for same-day dispatch</span
+			>
+		</p>
+	</div>
+
 	<gok-navbar class="chrome" accessible-label="Primary" {@attach setProps({ value: section })}>
 		<a slot="brand" class="brand" href="/">gökberk<span class="brand__dot">.</span> tools</a>
 		<gok-navbar-item href="/catalog" value="catalog">Catalog</gok-navbar-item>
 		<gok-navbar-item href="/journal" value="journal">Journal</gok-navbar-item>
 		<gok-navbar-item href="/support" value="support">Support</gok-navbar-item>
 		<div slot="actions" class="actions">
-			<form class="search" onsubmit={handleSearch} role="search">
-				<gok-input
-					type="search"
-					placeholder="Search tools"
-					accessible-label="Search tools"
-					{@attach on('input', (e) => (q = (e.target as HTMLInputElement & { value: string }).value))}
-				>
-					<svg
-						slot="leading"
-						class="ico"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.5"
-						aria-hidden="true"
-					>
-						<circle cx="11" cy="11" r="6" />
-						<path d="m20 20-3.2-3.2" />
-					</svg>
-				</gok-input>
-			</form>
-			<gok-theme-switch accessible-label="Theme"></gok-theme-switch>
 			<gok-menu placement="bottom-end" {@attach on('gok-select', handleMenu)}>
 				<gok-button slot="trigger" variant="secondary" accessible-label="Account menu">
 					<svg
@@ -102,6 +95,11 @@
 				<gok-menu-item value="account">Account</gok-menu-item>
 				<gok-menu-item value="orders">Orders</gok-menu-item>
 				<gok-menu-item value="wishlist">Wishlist · {wishlist.count}</gok-menu-item>
+				<hr />
+				<div class="menu-theme" role="presentation">
+					<span class="menu-theme__label">Theme</span>
+					<gok-theme-switch compact label="Theme"></gok-theme-switch>
+				</div>
 				<hr />
 				<gok-menu-item
 					type="checkbox"
@@ -135,9 +133,16 @@
 
 	<main class="app__main">{@render children()}</main>
 
-	<footer class="footer">
-		<div class="gok-container">
+	<footer class="footer band" data-theme="dark">
+		<div class="band__inner">
 			<div class="footer__grid">
+				<div class="footer__brand">
+					<a class="brand" href="/">gökberk<span class="brand__dot">.</span> tools</a>
+					<p class="footer__tagline">
+						Precision cutting tools — carbide inserts, drills, mills, and holders that hold
+						tolerance, shift after shift.
+					</p>
+				</div>
 				<div class="footer__col">
 					<h2 class="gok-eyebrow footer__heading">Shop</h2>
 					<gok-link href="/catalog">Catalog</gok-link>
@@ -224,6 +229,42 @@
 </div>
 
 <style>
+	.announce {
+		background-color: var(--gok-color-neutral-9);
+	}
+
+	.announce__text {
+		margin: 0;
+		padding-block: var(--gok-space-200);
+		color: var(--gok-color-text);
+		font-size: var(--gok-type-body-small-size);
+		line-height: var(--gok-type-body-small-line);
+	}
+
+	.announce__extra {
+		color: var(--gok-color-text-muted);
+	}
+
+	@media (max-width: 39rem) {
+		.announce__extra {
+			display: none;
+		}
+	}
+
+	.chrome {
+		--gok-navbar-padding-inline: var(--gok-container-inline-pad);
+	}
+
+	/* Lift the sticky chrome and footer into their own view-transition layers so they
+	   stay put while the page content crossfades beneath them (see app.css). */
+	.chrome {
+		view-transition-name: site-header;
+	}
+
+	.footer {
+		view-transition-name: site-footer;
+	}
+
 	.brand {
 		text-decoration: none;
 		color: var(--gok-color-text);
@@ -243,14 +284,25 @@
 		gap: var(--gok-space-200);
 	}
 
-	.search gok-input {
-		inline-size: clamp(8rem, 18vw, 14rem);
-	}
-
 	.ico {
 		inline-size: var(--gok-size-icon-m);
 		block-size: var(--gok-size-icon-m);
 		display: block;
+	}
+
+	.menu-theme {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--gok-space-400);
+		padding-block: var(--gok-space-200);
+		padding-inline: var(--gok-space-300);
+	}
+
+	.menu-theme__label {
+		color: var(--gok-color-text-muted);
+		font-size: var(--gok-type-body-small-size);
+		line-height: var(--gok-type-body-small-line);
 	}
 
 	.cart-btn {
@@ -308,14 +360,28 @@
 
 	/* Footer */
 	.footer {
-		border-block-start: var(--gok-border-width-hairline) solid var(--gok-color-border);
-		padding-block: var(--gok-space-section);
+		background-color: var(--gok-color-neutral-9);
+		padding-block: var(--gok-space-section) var(--gok-space-700);
 	}
 
 	.footer__grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-		gap: var(--gok-space-700);
+		grid-template-columns: minmax(16rem, 1.6fr) repeat(3, minmax(8rem, 1fr)) minmax(18rem, 1.3fr);
+		gap: clamp(var(--gok-space-600), 4vw, var(--gok-space-800));
+	}
+
+	.footer__brand {
+		display: flex;
+		flex-direction: column;
+		gap: var(--gok-space-300);
+	}
+
+	.footer__tagline {
+		margin: 0;
+		color: var(--gok-color-text-muted);
+		font-size: var(--gok-type-body-small-size);
+		line-height: var(--gok-type-body-small-line);
+		max-inline-size: 34ch;
 	}
 
 	.footer__col {
@@ -323,6 +389,18 @@
 		flex-direction: column;
 		align-items: flex-start;
 		gap: var(--gok-space-300);
+	}
+
+	@media (max-width: 56rem) {
+		.footer__grid {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	@media (max-width: 39rem) {
+		.footer__grid {
+			grid-template-columns: 1fr;
+		}
 	}
 
 	.footer__heading {

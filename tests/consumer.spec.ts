@@ -7,7 +7,8 @@ import { test, expect } from '@playwright/test';
 test('home renders the hero and chrome', async ({ page }) => {
 	await page.goto('/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('hold tolerance');
-	await expect(page.getByRole('link', { name: 'gökberk. tools' })).toBeVisible();
+	// The wordmark appears in the chrome and again in the footer brand lockup; assert the header one.
+	await expect(page.locator('gok-navbar').getByRole('link', { name: 'gökberk. tools' })).toBeVisible();
 });
 
 test('catalog filters by category', async ({ page }) => {

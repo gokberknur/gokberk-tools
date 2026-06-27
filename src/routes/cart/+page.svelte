@@ -40,7 +40,7 @@
 
 <svelte:head><title>Cart — gökberk tools</title></svelte:head>
 
-<div class="cart gok-container">
+<div class="cart band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item>Cart</gok-breadcrumb-item>

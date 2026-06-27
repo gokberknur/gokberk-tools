@@ -16,6 +16,8 @@ html {
 	color: var(--gok-color-text);
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
+	/* Anchor targets and route changes land clear of the sticky chrome. */
+	scroll-padding-block-start: 6rem;
 }
 
 body {
@@ -37,6 +39,91 @@ body {
 	flex: 1 1 auto;
 }
 
+/*
+ * Full-bleed band system. The page is full-width by design — no content cap. Each
+ * <section class="band"> runs edge-to-edge so a surface fill or hairline spans the
+ * viewport; its inner `.band__inner` holds content in the fluid page gutter (the same
+ * clamp the design-system container uses). Readability comes from the gutter and from
+ * intrinsic column caps inside, never from capping the canvas.
+ */
+.band {
+	padding-block: var(--gok-space-section);
+}
+
+/* A quiet tonal shift for the occasional section — a faint paper/ink change, never a
+   box. Used sparingly; space and hairlines carry most of the separation. */
+.band--alt {
+	background-color: light-dark(var(--gok-color-neutral-1), var(--gok-color-neutral-8));
+}
+
+/* Hairline rules above and/or below a band when space alone isn't enough. */
+.band--edge {
+	border-block: var(--gok-border-width-hairline) solid var(--gok-color-border);
+}
+
+.band--edge-block-end {
+	border-block-end: var(--gok-border-width-hairline) solid var(--gok-color-border);
+}
+
+.band__inner {
+	box-sizing: border-box;
+	inline-size: 100%;
+	margin-inline: auto;
+	/* The fluid page gutter — 24px → 64px — shared with the chrome so the header content
+	   lines up with the bands below it. */
+	padding-inline: var(--gok-container-inline-pad);
+}
+
+/*
+ * The editorial section head: the mono-uppercase eyebrow + sentence-case heading stack
+ * on the left, a narrower supporting paragraph sits on the right, baselines aligned.
+ * The gökberk signature head, given the two-column editorial measure.
+ */
+.section-head {
+	display: grid;
+	grid-template-columns: 1.3fr 1fr;
+	column-gap: clamp(var(--gok-space-600), 5vw, var(--gok-space-900));
+	row-gap: var(--gok-space-200);
+	align-items: end;
+	margin-block-end: var(--gok-space-section);
+}
+
+.section-head__eyebrow {
+	grid-column: 1;
+	grid-row: 1;
+	margin: 0;
+}
+
+.section-head__title {
+	grid-column: 1;
+	grid-row: 2;
+	margin: 0;
+}
+
+.section-head__lead {
+	grid-column: 2;
+	grid-row: 1 / 3;
+	align-self: end;
+	margin: 0;
+	max-inline-size: 48ch;
+	color: var(--gok-color-text-muted);
+}
+
+/* At narrow widths the editorial split stacks into a single left-aligned column. */
+@media (max-width: 56rem) {
+	.section-head {
+		grid-template-columns: 1fr;
+		align-items: start;
+	}
+
+	.section-head__eyebrow,
+	.section-head__title,
+	.section-head__lead {
+		grid-column: 1;
+		grid-row: auto;
+	}
+}
+
 /* Respect the brand's quiet-motion principle for anyone who asks for less. */
 @media (prefers-reduced-motion: reduce) {
 	*,
@@ -46,5 +133,47 @@ body {
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
+	}
+}
+
+/*
+ * Native View Transitions on client navigation (driven by the onNavigate hook in
+ * +layout.svelte). The page content crossfades with a small upward rise; the navbar
+ * and footer are pinned via their own view-transition-name (set in +layout.svelte),
+ * so only the content animates. Quiet and fast, per the brand's motion principle.
+ */
+::view-transition-group(root) {
+	animation-duration: var(--gok-motion-duration-moderate);
+}
+
+::view-transition-old(root) {
+	animation: vt-page-out var(--gok-motion-duration-moderate) var(--gok-motion-ease-dynamic) both;
+}
+
+::view-transition-new(root) {
+	animation: vt-page-in var(--gok-motion-duration-moderate) var(--gok-motion-ease-precise) both;
+}
+
+@keyframes vt-page-out {
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes vt-page-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+}
+
+/* The reduced-motion block above zeroes normal animations, but the universal selector
+   never matches view-transition pseudo-elements — disable them explicitly so navigation
+   becomes an instant swap. */
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
 	}
 }

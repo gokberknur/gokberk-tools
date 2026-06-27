@@ -88,7 +88,7 @@
 
 <svelte:head><title>Catalog — gökberk tools</title></svelte:head>
 
-<div class="catalog gok-container">
+<div class="catalog band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item href="/catalog">Catalog</gok-breadcrumb-item>

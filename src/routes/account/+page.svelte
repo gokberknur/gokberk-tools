@@ -63,7 +63,7 @@
 
 <svelte:head><title>Account — gökberk tools</title></svelte:head>
 
-<div class="account gok-container">
+<div class="account band__inner">
 	<gok-breadcrumb label="Breadcrumb">
 		<gok-breadcrumb-item href="/">Home</gok-breadcrumb-item>
 		<gok-breadcrumb-item>Account</gok-breadcrumb-item>
