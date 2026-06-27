@@ -13,6 +13,12 @@ export interface SpecRow {
 	value: string;
 }
 
+export interface SpecGroup {
+	/** Section heading, e.g. "Dimensions". */
+	heading: string;
+	rows: SpecRow[];
+}
+
 export interface Product {
 	/** URL slug + stable id. */
 	id: string;
@@ -22,6 +28,8 @@ export interface Product {
 	name: string;
 	/** Invented grade code, e.g. "GK4325". */
 	grade: string;
+	/** Invented ordering/article code, e.g. "CNMG120408-GK4325". */
+	articleCode: string;
 	category: CategoryId;
 	subcategory: string;
 	/** Price in USD. */
@@ -35,7 +43,8 @@ export interface Product {
 	summary: string;
 	/** Longer overview paragraph. */
 	description: string;
-	specs: SpecRow[];
+	/** Grouped technical spec sheet. */
+	specs: SpecGroup[];
 	compatibility: string[];
 	/** Related product ids ("pairs well with"). */
 	related: string[];
@@ -113,6 +122,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Turn',
 		name: 'gök Turn T1',
 		grade: 'GK4325',
+		articleCode: 'CNMG120408-GK4325',
 		category: 'turning',
 		subcategory: 'Inserts',
 		price: 18.4,
@@ -123,11 +133,38 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A first-choice insert for medium roughing to finishing in steel and stainless. The GK4325 grade pairs a tough substrate with a CVD coating that holds an edge through interrupted cuts and long production runs.',
 		specs: [
-			{ label: 'Insert shape', value: 'CNMG 120408' },
-			{ label: 'Grade', value: 'GK4325' },
-			{ label: 'Coating', value: 'CVD Ti(C,N)+Al₂O₃' },
-			{ label: 'Corner radius', value: '0.8 mm' },
-			{ label: 'Chipbreaker', value: 'PM medium' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'CNMG120408-GK4325' },
+					{ label: 'ISO designation', value: 'CNMG 120408-PM' },
+					{ label: 'Grade', value: 'GK4325' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Insert shape', value: 'CNMG 120408' },
+					{ label: 'Cutting-edge length', value: '12 mm' },
+					{ label: 'Corner radius', value: '0.8 mm' },
+					{ label: 'Insert thickness', value: '4.76 mm' },
+					{ label: 'Chipbreaker', value: 'PM medium' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Tough carbide' },
+					{ label: 'Coating', value: 'CVD Ti(C,N)+Al₂O₃' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [
+					{ label: 'Weight', value: '0.018 kg' },
+					{ label: 'Package quantity', value: '10' }
+				]
+			}
 		],
 		compatibility: ['gök Hold H1', 'ISO CNMG holders'],
 		related: ['gok-hold-h1', 'gok-turn-t3', 'gok-groove-g4'],
@@ -138,6 +175,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Turn',
 		name: 'gök Turn T3',
 		grade: 'GK1115',
+		articleCode: 'DCMT11T304-GK1115',
 		category: 'turning',
 		subcategory: 'Inserts',
 		price: 21.9,
@@ -148,11 +186,38 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A sharp, PVD-coated grade for finishing stainless, titanium, and heat-resistant superalloys where a keen edge keeps cutting forces and heat down.',
 		specs: [
-			{ label: 'Insert shape', value: 'DCMT 11T304' },
-			{ label: 'Grade', value: 'GK1115' },
-			{ label: 'Coating', value: 'PVD TiAlN' },
-			{ label: 'Corner radius', value: '0.4 mm' },
-			{ label: 'Chipbreaker', value: 'SF finishing' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'DCMT11T304-GK1115' },
+					{ label: 'ISO designation', value: 'DCMT 11T304-SF' },
+					{ label: 'Grade', value: 'GK1115' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Insert shape', value: 'DCMT 11T304' },
+					{ label: 'Cutting-edge length', value: '11 mm' },
+					{ label: 'Corner radius', value: '0.4 mm' },
+					{ label: 'Insert thickness', value: '3.97 mm' },
+					{ label: 'Chipbreaker', value: 'SF finishing' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Fine-grain carbide' },
+					{ label: 'Coating', value: 'PVD TiAlN' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [
+					{ label: 'Weight', value: '0.011 kg' },
+					{ label: 'Package quantity', value: '10' }
+				]
+			}
 		],
 		compatibility: ['gök Hold H1', 'ISO DCMT holders'],
 		related: ['gok-turn-t1', 'gok-hold-h1', 'gok-thread-th2']
@@ -162,6 +227,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Hold',
 		name: 'gök Hold H1',
 		grade: 'QC-25',
+		articleCode: 'PCLNR-2525M-12',
 		category: 'turning',
 		subcategory: 'Holders',
 		price: 248,
@@ -171,10 +237,46 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A rigid quick-change holder with through-coolant to the cutting edge. Repeatable to ±0.01 mm on tool change, so you swap inserts without re-setting the offset.',
 		specs: [
-			{ label: 'Shank', value: '25 × 25 mm' },
-			{ label: 'Interface', value: 'QC-25 quick change' },
-			{ label: 'Coolant', value: 'Through-tool, 70 bar' },
-			{ label: 'Repeatability', value: '±0.01 mm' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'PCLNR-2525M-12' },
+					{ label: 'ISO designation', value: 'PCLNR 2525M 12' },
+					{ label: 'Hand', value: 'Right' }
+				]
+			},
+			{
+				heading: 'Dimensions',
+				rows: [
+					{ label: 'Shank', value: '25 × 25 mm' },
+					{ label: 'Overall length', value: '150 mm' },
+					{ label: 'Functional width', value: '32 mm' },
+					{ label: 'Max overhang', value: '50 mm' }
+				]
+			},
+			{
+				heading: 'Connection',
+				rows: [
+					{ label: 'Interface', value: 'QC-25 quick change' },
+					{ label: 'Clamping', value: 'Lever over insert' },
+					{ label: 'Insert seat', value: 'CNMG 12' }
+				]
+			},
+			{
+				heading: 'Coolant',
+				rows: [
+					{ label: 'Type', value: 'Through-tool' },
+					{ label: 'Pressure', value: '70 bar' },
+					{ label: 'Exit', value: 'At cutting edge' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [
+					{ label: 'Body material', value: 'Steel' },
+					{ label: 'Weight', value: '0.68 kg' }
+				]
+			}
 		],
 		compatibility: ['gök Turn T1', 'gök Turn T3'],
 		related: ['gok-turn-t1', 'gok-turn-t3', 'gok-groove-g4'],
@@ -185,6 +287,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Mill',
 		name: 'gök Mill M3',
 		grade: 'GK2040',
+		articleCode: 'EM4-100R05-GK2040',
 		category: 'milling',
 		subcategory: 'End mills',
 		price: 96.5,
@@ -194,11 +297,42 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A versatile four-flute solid-carbide end mill for square shoulders and slotting in steel and stainless. A polished flute face clears chips cleanly at high feed.',
 		specs: [
-			{ label: 'Diameter', value: '10 mm' },
-			{ label: 'Flutes', value: '4' },
-			{ label: 'Grade', value: 'GK2040' },
-			{ label: 'Coating', value: 'PVD AlTiN' },
-			{ label: 'Helix', value: '38°' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'EM4-100R05-GK2040' },
+					{ label: 'ISO designation', value: 'EM 4F 10.0 R0.5' },
+					{ label: 'Grade', value: 'GK2040' }
+				]
+			},
+			{
+				heading: 'Dimensions',
+				rows: [
+					{ label: 'Cutting diameter', value: '10 mm' },
+					{ label: 'Flute length', value: '22 mm' },
+					{ label: 'Overall length', value: '72 mm' },
+					{ label: 'Shank diameter', value: '10 mm' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Number of flutes', value: '4' },
+					{ label: 'Helix angle', value: '38°' },
+					{ label: 'Corner radius', value: '0.5 mm' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Micro-grain carbide' },
+					{ label: 'Coating', value: 'PVD AlTiN' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [{ label: 'Weight', value: '0.052 kg' }]
+			}
 		],
 		compatibility: ['ER collet chucks', 'Shrink-fit holders'],
 		related: ['gok-mill-m5', 'gok-drill-d8', 'gok-mill-face-f2'],
@@ -209,6 +343,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Mill',
 		name: 'gök Mill M5',
 		grade: 'GK2515',
+		articleCode: 'EM3-120R00-GK2515',
 		category: 'milling',
 		subcategory: 'End mills',
 		price: 132,
@@ -218,11 +353,42 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A three-flute geometry with a bright, uncoated edge and wide gullet for high-feed machining in aluminium, where chip evacuation sets the limit.',
 		specs: [
-			{ label: 'Diameter', value: '12 mm' },
-			{ label: 'Flutes', value: '3' },
-			{ label: 'Grade', value: 'GK2515' },
-			{ label: 'Coating', value: 'Uncoated, polished' },
-			{ label: 'Helix', value: '45°' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'EM3-120R00-GK2515' },
+					{ label: 'ISO designation', value: 'EM 3F 12.0 R0.0' },
+					{ label: 'Grade', value: 'GK2515' }
+				]
+			},
+			{
+				heading: 'Dimensions',
+				rows: [
+					{ label: 'Cutting diameter', value: '12 mm' },
+					{ label: 'Flute length', value: '30 mm' },
+					{ label: 'Overall length', value: '83 mm' },
+					{ label: 'Shank diameter', value: '12 mm' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Number of flutes', value: '3' },
+					{ label: 'Helix angle', value: '45°' },
+					{ label: 'Corner radius', value: 'Sharp' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Fine-grain carbide' },
+					{ label: 'Coating', value: 'Uncoated, polished' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [{ label: 'Weight', value: '0.071 kg' }]
+			}
 		],
 		compatibility: ['ER collet chucks', 'Hydraulic holders'],
 		related: ['gok-mill-m3', 'gok-mill-face-f2', 'gok-drill-d6']
@@ -232,6 +398,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Face',
 		name: 'gök Face F2',
 		grade: 'GK4330',
+		articleCode: 'FM45-050-22-5P',
 		category: 'milling',
 		subcategory: 'Face mills',
 		price: 410,
@@ -241,10 +408,48 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A 50 mm indexable face mill running five double-sided inserts for productive facing of steel and cast iron. Built to be re-tipped, not retired.',
 		specs: [
-			{ label: 'Cutting diameter', value: '50 mm' },
-			{ label: 'Pockets', value: '5' },
-			{ label: 'Insert', value: 'SDMT 1205' },
-			{ label: 'Approach angle', value: '45°' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'FM45-050-22-5P' },
+					{ label: 'ISO designation', value: 'FM45 050 A22 05' },
+					{ label: 'Grade', value: 'GK4330' }
+				]
+			},
+			{
+				heading: 'Dimensions',
+				rows: [
+					{ label: 'Cutting diameter', value: '50 mm' },
+					{ label: 'Arbor bore', value: '22 mm' },
+					{ label: 'Max depth of cut', value: '6 mm' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Insert count', value: '5' },
+					{ label: 'Approach angle', value: '45°' },
+					{ label: 'Max ramping angle', value: '2°' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Insert', value: 'SDMT 1205' },
+					{ label: 'Coating', value: 'CVD Ti(C,N)+Al₂O₃' }
+				]
+			},
+			{
+				heading: 'Coolant',
+				rows: [{ label: 'Type', value: 'Through-body to each pocket' }]
+			},
+			{
+				heading: 'General',
+				rows: [
+					{ label: 'Body material', value: 'Alloy steel' },
+					{ label: 'Weight', value: '0.74 kg' }
+				]
+			}
 		],
 		compatibility: ['Arbor 22 mm'],
 		related: ['gok-mill-m3', 'gok-mill-m5']
@@ -254,6 +459,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Drill',
 		name: 'gök Drill D8',
 		grade: 'GK3010',
+		articleCode: 'SD5D-0800-GK3010',
 		category: 'drilling',
 		subcategory: 'Solid carbide',
 		price: 74.2,
@@ -263,11 +469,50 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A solid-carbide drill with through-coolant and a self-centring point for straight, accurate holes to 5× diameter in steel and stainless.',
 		specs: [
-			{ label: 'Diameter', value: '8 mm' },
-			{ label: 'Depth', value: '5 × D' },
-			{ label: 'Grade', value: 'GK3010' },
-			{ label: 'Coating', value: 'PVD TiAlN' },
-			{ label: 'Point angle', value: '140°' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'SD5D-0800-GK3010' },
+					{ label: 'ISO designation', value: 'SD 8.0 05D IC' },
+					{ label: 'Grade', value: 'GK3010' }
+				]
+			},
+			{
+				heading: 'Dimensions',
+				rows: [
+					{ label: 'Cutting diameter', value: '8 mm' },
+					{ label: 'Drilling depth', value: '5 × D' },
+					{ label: 'Flute length', value: '48 mm' },
+					{ label: 'Overall length', value: '89 mm' },
+					{ label: 'Shank diameter', value: '8 mm' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Point angle', value: '140°' },
+					{ label: 'Helix angle', value: '30°' },
+					{ label: 'Number of flutes', value: '2' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Micro-grain carbide' },
+					{ label: 'Coating', value: 'PVD TiAlN' }
+				]
+			},
+			{
+				heading: 'Cooling',
+				rows: [
+					{ label: 'Coolant', value: 'Through-tool' },
+					{ label: 'Through-coolant', value: 'Twin helical ducts' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [{ label: 'Weight', value: '0.046 kg' }]
+			}
 		],
 		compatibility: ['ER collet chucks', 'Hydraulic holders'],
 		related: ['gok-drill-d6', 'gok-mill-m3', 'gok-thread-th2'],
@@ -278,6 +523,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Drill',
 		name: 'gök Drill D6',
 		grade: 'GK3010',
+		articleCode: 'SD3D-0600-GK3010',
 		category: 'drilling',
 		subcategory: 'Solid carbide',
 		price: 61.8,
@@ -287,11 +533,50 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A general-purpose 3× diameter solid-carbide drill for shallow holes across a range of materials — a dependable shop staple.',
 		specs: [
-			{ label: 'Diameter', value: '6 mm' },
-			{ label: 'Depth', value: '3 × D' },
-			{ label: 'Grade', value: 'GK3010' },
-			{ label: 'Coating', value: 'PVD TiAlN' },
-			{ label: 'Point angle', value: '140°' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'SD3D-0600-GK3010' },
+					{ label: 'ISO designation', value: 'SD 6.0 03D IC' },
+					{ label: 'Grade', value: 'GK3010' }
+				]
+			},
+			{
+				heading: 'Dimensions',
+				rows: [
+					{ label: 'Cutting diameter', value: '6 mm' },
+					{ label: 'Drilling depth', value: '3 × D' },
+					{ label: 'Flute length', value: '28 mm' },
+					{ label: 'Overall length', value: '66 mm' },
+					{ label: 'Shank diameter', value: '6 mm' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Point angle', value: '140°' },
+					{ label: 'Helix angle', value: '30°' },
+					{ label: 'Number of flutes', value: '2' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Micro-grain carbide' },
+					{ label: 'Coating', value: 'PVD TiAlN' }
+				]
+			},
+			{
+				heading: 'Cooling',
+				rows: [
+					{ label: 'Coolant', value: 'Through-tool' },
+					{ label: 'Through-coolant', value: 'Twin helical ducts' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [{ label: 'Weight', value: '0.026 kg' }]
+			}
 		],
 		compatibility: ['ER collet chucks'],
 		related: ['gok-drill-d8', 'gok-mill-m5']
@@ -301,6 +586,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Thread',
 		name: 'gök Thread TH2',
 		grade: 'GK1620',
+		articleCode: 'TM-M6M12-15ISO-GK1620',
 		category: 'threading',
 		subcategory: 'Thread mills',
 		price: 158,
@@ -310,10 +596,43 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A full-profile solid-carbide thread mill that cuts a range of pitches from one tool — one tool, many threads, with no risk of a broken tap in the part.',
 		specs: [
-			{ label: 'Thread range', value: 'M6–M12' },
-			{ label: 'Grade', value: 'GK1620' },
-			{ label: 'Coating', value: 'PVD TiCN' },
-			{ label: 'Flutes', value: '3' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'TM-M6M12-15ISO-GK1620' },
+					{ label: 'ISO designation', value: 'TM 60° M6–M12' },
+					{ label: 'Grade', value: 'GK1620' }
+				]
+			},
+			{
+				heading: 'Dimensions',
+				rows: [
+					{ label: 'Cutting diameter', value: '5 mm' },
+					{ label: 'Thread range', value: 'M6–M12' },
+					{ label: 'Overall length', value: '70 mm' },
+					{ label: 'Shank diameter', value: '6 mm' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Number of flutes', value: '3' },
+					{ label: 'Helix angle', value: '0° (straight)' },
+					{ label: 'Thread profile', value: '60° ISO metric' },
+					{ label: 'Pitch range', value: '1.0–1.75 mm' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Micro-grain carbide' },
+					{ label: 'Coating', value: 'PVD TiCN' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [{ label: 'Weight', value: '0.028 kg' }]
+			}
 		],
 		compatibility: ['ER collet chucks', 'Hydraulic holders'],
 		related: ['gok-drill-d8', 'gok-turn-t3']
@@ -323,6 +642,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Groove',
 		name: 'gök Groove G4',
 		grade: 'GK4215',
+		articleCode: 'GP300-021-GK4215',
 		category: 'grooving',
 		subcategory: 'Parting',
 		price: 27.5,
@@ -333,10 +653,38 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A 3 mm parting-off insert with a reinforced edge and a chipbreaker that curls and clears the chip down the groove, even deep in the cut.',
 		specs: [
-			{ label: 'Width', value: '3 mm' },
-			{ label: 'Grade', value: 'GK4215' },
-			{ label: 'Coating', value: 'CVD' },
-			{ label: 'Max depth', value: '21 mm' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'GP300-021-GK4215' },
+					{ label: 'ISO designation', value: 'GP 300-021-CR' },
+					{ label: 'Grade', value: 'GK4215' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Insert shape', value: 'Parting, double-ended' },
+					{ label: 'Width', value: '3 mm' },
+					{ label: 'Max depth', value: '21 mm' },
+					{ label: 'Insert seat', value: '3 mm rail' },
+					{ label: 'Chipbreaker', value: 'CR reinforced' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Tough carbide' },
+					{ label: 'Coating', value: 'CVD' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [
+					{ label: 'Weight', value: '0.009 kg' },
+					{ label: 'Package quantity', value: '10' }
+				]
+			}
 		],
 		compatibility: ['gök Groove blade GB-3'],
 		related: ['gok-turn-t1', 'gok-hold-h1']
@@ -346,6 +694,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Groove',
 		name: 'gök Groove GB-3',
 		grade: 'QC-25',
+		articleCode: 'GB26-300-150R',
 		category: 'grooving',
 		subcategory: 'Grooving',
 		price: 196,
@@ -355,9 +704,46 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A rigid parting blade with high-pressure coolant aimed at the edge — it keeps the cut cool and the chip moving on deep parting work.',
 		specs: [
-			{ label: 'Blade height', value: '26 mm' },
-			{ label: 'Insert seat', value: '3 mm' },
-			{ label: 'Coolant', value: 'High-pressure, 2 ports' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'GB26-300-150R' },
+					{ label: 'ISO designation', value: 'GB 26 03 150 R' },
+					{ label: 'Hand', value: 'Right' }
+				]
+			},
+			{
+				heading: 'Dimensions',
+				rows: [
+					{ label: 'Blade height', value: '26 mm' },
+					{ label: 'Overall length', value: '150 mm' },
+					{ label: 'Functional width', value: '3 mm' },
+					{ label: 'Insert seat', value: '3 mm' }
+				]
+			},
+			{
+				heading: 'Connection',
+				rows: [
+					{ label: 'Clamping', value: 'Self-grip rail' },
+					{ label: 'Insert seat', value: '3 mm' },
+					{ label: 'Coupling', value: 'Block-mounted blade' }
+				]
+			},
+			{
+				heading: 'Coolant',
+				rows: [
+					{ label: 'Type', value: 'High-pressure, 2 ports' },
+					{ label: 'Pressure', value: '80 bar' },
+					{ label: 'Exit', value: 'Rake and flank' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [
+					{ label: 'Body material', value: 'Steel' },
+					{ label: 'Weight', value: '0.31 kg' }
+				]
+			}
 		],
 		compatibility: ['gök Groove G4'],
 		related: ['gok-groove-g4', 'gok-hold-h1']
@@ -367,6 +753,7 @@ export const PRODUCTS: Product[] = [
 		line: 'gök Turn',
 		name: 'gök Turn T5',
 		grade: 'GK3220',
+		articleCode: 'SNMG120408-GK3220',
 		category: 'turning',
 		subcategory: 'Inserts',
 		price: 24.6,
@@ -377,10 +764,38 @@ export const PRODUCTS: Product[] = [
 		description:
 			'A hard, wear-resistant grade for high-speed turning of grey cast iron, where abrasion — not toughness — is the limit.',
 		specs: [
-			{ label: 'Insert shape', value: 'SNMG 120408' },
-			{ label: 'Grade', value: 'GK3220' },
-			{ label: 'Coating', value: 'CVD Al₂O₃' },
-			{ label: 'Corner radius', value: '0.8 mm' }
+			{
+				heading: 'Identification',
+				rows: [
+					{ label: 'Ordering code', value: 'SNMG120408-GK3220' },
+					{ label: 'ISO designation', value: 'SNMG 120408-KR' },
+					{ label: 'Grade', value: 'GK3220' }
+				]
+			},
+			{
+				heading: 'Geometry',
+				rows: [
+					{ label: 'Insert shape', value: 'SNMG 120408' },
+					{ label: 'Cutting-edge length', value: '12 mm' },
+					{ label: 'Corner radius', value: '0.8 mm' },
+					{ label: 'Insert thickness', value: '4.76 mm' },
+					{ label: 'Chipbreaker', value: 'KR cast-iron roughing' }
+				]
+			},
+			{
+				heading: 'Material & coating',
+				rows: [
+					{ label: 'Substrate', value: 'Wear-resistant carbide' },
+					{ label: 'Coating', value: 'CVD Al₂O₃' }
+				]
+			},
+			{
+				heading: 'General',
+				rows: [
+					{ label: 'Weight', value: '0.020 kg' },
+					{ label: 'Package quantity', value: '10' }
+				]
+			}
 		],
 		compatibility: ['gök Hold H1'],
 		related: ['gok-turn-t1', 'gok-hold-h1']
