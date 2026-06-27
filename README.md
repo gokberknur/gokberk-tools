@@ -6,6 +6,8 @@ consumer) for the [**@gokberknur/design-system**](https://www.npmjs.com/package/
 component library: `gok-*` web components, `--gok-*` tokens, a monochrome canvas with one earned
 forest-green accent.
 
+**Live → <https://tools.gokberk.se>**
+
 ## Stack
 
 - **SvelteKit** + `adapter-static` — a prerendered/SPA static site, deployable to any static host
@@ -48,5 +50,6 @@ npm install` to return to the published package.
 
 ## Related
 
+- Live store: <https://tools.gokberk.se>
 - Design system package: <https://www.npmjs.com/package/@gokberknur/design-system>
 - Home: <https://gokberk.se>
