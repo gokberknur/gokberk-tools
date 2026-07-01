@@ -7,7 +7,7 @@
 	import { cart } from '$lib/state/cart.svelte';
 	import { wishlist } from '$lib/state/wishlist.svelte';
 	import { density } from '$lib/state/density.svelte';
-	import { getProduct, formatPrice } from '$lib/data';
+	import { getProduct, formatPrice, CATEGORIES, PRODUCTS } from '$lib/data';
 	import { setProps, on } from '$lib/wc.svelte';
 
 	let { children } = $props();
@@ -27,6 +27,23 @@
 	});
 
 	let cartOpen = $state(false);
+
+	let commandMenuEl = $state<(HTMLElement & { show?: () => void }) | null>(null);
+
+	const commands = [
+		{ id: 'nav-catalog', title: 'Catalog', section: 'Navigation', keywords: ['shop', 'tools', 'browse'], action: () => goto('/catalog') },
+		{ id: 'nav-journal', title: 'Journal', section: 'Navigation', keywords: ['blog', 'field notes'], action: () => goto('/journal') },
+		{ id: 'nav-support', title: 'Support', section: 'Navigation', keywords: ['help', 'contact', 'faq'], action: () => goto('/support') },
+		{ id: 'nav-cart', title: 'Cart', section: 'Navigation', action: () => goto('/cart') },
+		{ id: 'nav-account', title: 'Account', section: 'Navigation', keywords: ['orders', 'settings'], action: () => goto('/account') },
+		{ id: 'nav-wishlist', title: 'Wishlist', section: 'Navigation', action: () => goto('/wishlist') },
+		...CATEGORIES.map((c) => ({ id: `cat-${c.id}`, title: c.name, section: 'Categories', action: () => goto(`/catalog?category=${c.id}`) })),
+		...PRODUCTS.map((p) => ({ id: `prod-${p.id}`, title: p.name, section: 'Products', keywords: p.materials, action: () => goto(`/product/${p.id}`) }))
+	];
+
+	function openCommandMenu() {
+		commandMenuEl?.show?.();
+	}
 
 	const section = $derived.by(() => {
 		const path = page.url.pathname;
@@ -77,6 +94,13 @@
 		<gok-navbar-item href="/journal" value="journal">Journal</gok-navbar-item>
 		<gok-navbar-item href="/support" value="support">Support</gok-navbar-item>
 		<div slot="actions" class="actions">
+			<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+			<gok-button class="search-btn" variant="secondary" accessible-label="Search" onclick={openCommandMenu}>
+				<svg slot="icon" class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+					<circle cx="11" cy="11" r="7" />
+					<path d="M21 21l-4.3-4.3" />
+				</svg>
+			</gok-button>
 			<gok-menu placement="bottom-end" {@attach on('gok-select', handleMenu)}>
 				<gok-button slot="trigger" variant="secondary" accessible-label="Account menu">
 					<svg
@@ -224,6 +248,13 @@
 			<gok-button variant="primary" onclick={() => go('/checkout')}>Checkout</gok-button>
 		</div>
 	</gok-drawer>
+
+	<gok-command-menu
+		bind:this={commandMenuEl}
+		label="Search"
+		placeholder="Search tools, categories, and pages…"
+		{@attach setProps({ commands })}
+	></gok-command-menu>
 
 	<gok-toast-region placement="bottom-end"></gok-toast-region>
 </div>

@@ -50,15 +50,9 @@
 			</p>
 		</gok-empty-state>
 	{:else}
-		<header class="head">
-			<div>
-				<p class="gok-eyebrow">Order</p>
-				<h1 class="gok-headline-3">{order.id}</h1>
-			</div>
-			<gok-badge variant={ORDER_STATUS_VARIANT[order.status]}>{ORDER_STATUS_LABEL[order.status]}</gok-badge>
-		</header>
-
-		<p class="placed gok-body-small muted">Placed {order.date}</p>
+		<gok-page-header eyebrow="Order" heading={order.id} caption={`Placed ${order.date}`}>
+			<gok-badge slot="actions" variant={ORDER_STATUS_VARIANT[order.status]}>{ORDER_STATUS_LABEL[order.status]}</gok-badge>
+		</gok-page-header>
 
 		{#if cancelled}
 			<gok-alert status="error">
@@ -108,23 +102,8 @@
 		padding-block: var(--gok-space-600) var(--gok-space-section-gap);
 	}
 
-	.head {
-		display: flex;
-		align-items: center;
-		gap: var(--gok-space-400);
-		margin-block: var(--gok-space-400) var(--gok-space-200);
-	}
-
-	.head h1 {
-		margin-block: var(--gok-space-100) 0;
-	}
-
-	.muted {
-		color: var(--gok-color-text-muted);
-	}
-
-	.placed {
-		margin-block-end: var(--gok-space-600);
+	gok-page-header {
+		margin-block: var(--gok-space-400) var(--gok-space-600);
 	}
 
 	.tracker {

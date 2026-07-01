@@ -33,15 +33,15 @@ It is a pure client **SPA** (`adapter-static`, `ssr = false` in `src/routes/+lay
 - The **mono uppercase eyebrow** is the one intentional uppercase. Left-aligned, **sentence-case**
   copy. Status by rule + icon + text, never colour alone. Logical CSS properties throughout.
 
-## Web-component ↔ Svelte interop (the tricky part — see `src/lib/wc.ts`)
+## Web-component ↔ Svelte interop (the tricky part — see `src/lib/wc.svelte.ts`)
 
 - **Registration is client-only.** `src/lib/gok.ts` imports the per-element side-effect subpaths
   (`@gokberknur/design-system/gok-button`, …); it's imported once from the root `+layout.svelte`.
 - **Objects/arrays must be set as DOM *properties*, not attributes.** Svelte sets attributes on custom
   elements by default; for `gok-table`'s `columns`/`rows` (and any object/array prop) assign the
-  property via the `setProps` action / an `$effect` in `src/lib/wc.ts`.
+  property via the `setProps` action / an `$effect` in `src/lib/wc.svelte.ts`.
 - **Hyphenated custom events** (`gok-page-change`, `gok-selection-change`, `gok-sort`, `change`, …):
-  attach with `addEventListener` via the `on` action in `src/lib/wc.ts`, not framework event sugar.
+  attach with `addEventListener` via the `on` action in `src/lib/wc.svelte.ts`, not framework event sugar.
 - No `bind:value` on custom elements — read values from `change`/`input` events, set back explicitly.
 - Slots into shadow DOM (`slot="actions"`, `slot="media"`, …) work with plain `slot="…"`.
 

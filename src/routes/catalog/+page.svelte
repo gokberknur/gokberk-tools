@@ -72,10 +72,6 @@
 		if (current > pageCount) current = pageCount;
 	});
 
-	function toggleMaterial(m: string) {
-		materials = materials.includes(m) ? materials.filter((x) => x !== m) : [...materials, m];
-	}
-
 	function clearFilters() {
 		materials = [];
 		inStockOnly = false;
@@ -109,16 +105,12 @@
 		</aside>
 
 		<main class="main">
-			<header class="head">
-				<div>
-					<p class="gok-eyebrow">Catalog</p>
-					<h1 class="gok-headline-3">{heading}</h1>
-				</div>
-				<p class="count gok-body-small gok-tabular-nums">
+			<gok-page-header eyebrow="Catalog" heading={heading}>
+				<p slot="actions" class="count gok-body-small gok-tabular-nums">
 					{filtered.length}
 					{filtered.length === 1 ? 'tool' : 'tools'}
 				</p>
-			</header>
+			</gok-page-header>
 
 			<!-- Filter bar -->
 			<div class="filters">
@@ -127,15 +119,13 @@
 					Categories
 				</gok-button>
 
-				<div class="facets" role="group" aria-label="Filter by material">
-					{#each MATERIALS as m (m)}
-						<gok-tag
-							selectable
-							value={m}
-							variant={materials.includes(m) ? 'selected' : 'default'}
-							{@attach on('toggle', () => toggleMaterial(m))}>{m}</gok-tag>
-					{/each}
-				</div>
+				<gok-multi-select
+					class="facets"
+					label="Material"
+					placeholder="Any material"
+					{@attach setProps({ options: MATERIALS.map((m) => ({ value: m, label: m })), values: materials })}
+					{@attach on('change', (e) => (materials = [...(e.target as HTMLElement & { values: string[] }).values]))}
+				></gok-multi-select>
 
 				<div class="controls">
 					<span class="stock">
@@ -241,16 +231,8 @@
 		inset-block-start: var(--gok-space-600);
 	}
 
-	.head {
-		display: flex;
-		align-items: flex-end;
-		justify-content: space-between;
-		gap: var(--gok-space-400);
+	gok-page-header {
 		margin-block-end: var(--gok-space-500);
-	}
-
-	.head p.gok-eyebrow {
-		margin-block-end: var(--gok-space-100);
 	}
 
 	.count {
@@ -273,9 +255,7 @@
 	}
 
 	.facets {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--gok-space-200);
+		min-inline-size: 12rem;
 	}
 
 	.controls {

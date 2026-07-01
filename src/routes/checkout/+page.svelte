@@ -4,6 +4,13 @@
 	import { getProduct, formatPrice, SHIPPING, TAX_RATE } from '$lib/data';
 	import { setProps, on } from '$lib/wc.svelte';
 
+	const COUNTRIES = [
+		{ value: 'se', label: 'Sweden' },
+		{ value: 'de', label: 'Germany' },
+		{ value: 'fr', label: 'France' },
+		{ value: 'uk', label: 'United Kingdom' }
+	];
+
 	type Step = 'shipping' | 'payment' | 'review';
 	const STEPS: { id: Step; label: string }[] = [
 		{ id: 'shipping', label: 'Shipping' },
@@ -97,10 +104,7 @@
 			</p>
 		</gok-empty-state>
 	{:else}
-		<header class="head">
-			<p class="gok-eyebrow">Checkout</p>
-			<h1 class="gok-headline-3">{STEPS[stepIndex].label}</h1>
-		</header>
+		<gok-page-header eyebrow="Checkout" heading={STEPS[stepIndex].label}></gok-page-header>
 
 		<div class="layout">
 			<div class="form-col">
@@ -123,12 +127,7 @@
 								<gok-input label="City" required {@attach setProps({ value: form.city })} {@attach on('input', (e) => (form.city = (e.target as HTMLInputElement).value))}></gok-input>
 								<gok-input label="Postal code" required {@attach setProps({ value: form.postal })} {@attach on('input', (e) => (form.postal = (e.target as HTMLInputElement).value))}></gok-input>
 							</div>
-							<gok-select label="Country" {@attach setProps({ value: form.country })} {@attach on('change', (e) => (form.country = (e.target as HTMLSelectElement).value))}>
-								<gok-option value="se">Sweden</gok-option>
-								<gok-option value="de">Germany</gok-option>
-								<gok-option value="fr">France</gok-option>
-								<gok-option value="uk">United Kingdom</gok-option>
-							</gok-select>
+							<gok-combobox label="Country" {@attach setProps({ options: COUNTRIES, value: form.country })} {@attach on('change', (e) => (form.country = (e.target as HTMLInputElement).value))}></gok-combobox>
 							<gok-radio-group label="Delivery" {@attach setProps({ value: form.delivery })} {@attach on('change', (e) => (form.delivery = (e.target as HTMLInputElement).value))}>
 								<gok-radio value="standard">Standard — 2 business days</gok-radio>
 								<gok-radio value="express">Express — next business day</gok-radio>
@@ -161,18 +160,20 @@
 					{/if}
 				</div>
 
-				<div class="nav">
-					{#if step !== 'shipping'}
-						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-						<gok-button variant="secondary" onclick={back}>Back</gok-button>
-					{/if}
-					{#if step === 'review'}
-						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-						<gok-button variant="primary" disabled={!form.terms || undefined} onclick={placeOrder}>Place order</gok-button>
-					{:else}
-						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-						<gok-button variant="primary" disabled={!stepValid || undefined} onclick={next}>Continue</gok-button>
-					{/if}
+				<div class="gok-action-bar">
+					<div class="gok-action-bar__actions">
+						{#if step !== 'shipping'}
+							<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+							<gok-button variant="secondary" onclick={back}>Back</gok-button>
+						{/if}
+						{#if step === 'review'}
+							<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+							<gok-button variant="primary" disabled={!form.terms || undefined} onclick={placeOrder}>Place order</gok-button>
+						{:else}
+							<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+							<gok-button variant="primary" disabled={!stepValid || undefined} onclick={next}>Continue</gok-button>
+						{/if}
+					</div>
 				</div>
 			</div>
 
@@ -196,9 +197,7 @@
 		padding-block: var(--gok-space-600) var(--gok-space-section-gap);
 	}
 
-	.head {
-		display: grid;
-		gap: var(--gok-space-100);
+	gok-page-header {
 		margin-block: var(--gok-space-400) var(--gok-space-600);
 	}
 
@@ -245,12 +244,6 @@
 		gap: var(--gok-space-400);
 		padding-block-end: var(--gok-space-300);
 		border-block-end: var(--gok-border-width-hairline) solid var(--gok-color-border);
-	}
-
-	.nav {
-		display: flex;
-		gap: var(--gok-space-300);
-		margin-block-start: var(--gok-space-600);
 	}
 
 	.summary {
