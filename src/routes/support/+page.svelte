@@ -10,10 +10,7 @@
 		<gok-breadcrumb-item>Support</gok-breadcrumb-item>
 	</gok-breadcrumb>
 
-	<header class="head">
-		<p class="gok-eyebrow">Support</p>
-		<h1 class="gok-headline-2">How can we help?</h1>
-	</header>
+	<gok-page-header eyebrow="Support" heading="How can we help?"></gok-page-header>
 
 	<gok-alert status="info">
 		<span slot="title">Support hours</span>
@@ -80,9 +77,7 @@
 		padding-block: var(--gok-space-600) var(--gok-space-section-gap);
 	}
 
-	.head {
-		display: grid;
-		gap: var(--gok-space-100);
+	gok-page-header {
 		margin-block: var(--gok-space-400) var(--gok-space-500);
 	}
 

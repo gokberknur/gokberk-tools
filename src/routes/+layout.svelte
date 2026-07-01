@@ -7,7 +7,7 @@
 	import { cart } from '$lib/state/cart.svelte';
 	import { wishlist } from '$lib/state/wishlist.svelte';
 	import { density } from '$lib/state/density.svelte';
-	import { getProduct, formatPrice } from '$lib/data';
+	import { getProduct, formatPrice, CATEGORIES, PRODUCTS } from '$lib/data';
 	import { setProps, on } from '$lib/wc.svelte';
 
 	let { children } = $props();
@@ -27,6 +27,17 @@
 	});
 
 	let cartOpen = $state(false);
+
+	const commands = [
+		{ id: 'nav-catalog', title: 'Catalog', section: 'Navigation', keywords: ['shop', 'tools', 'browse'], action: () => goto('/catalog') },
+		{ id: 'nav-journal', title: 'Journal', section: 'Navigation', keywords: ['blog', 'field notes'], action: () => goto('/journal') },
+		{ id: 'nav-support', title: 'Support', section: 'Navigation', keywords: ['help', 'contact', 'faq'], action: () => goto('/support') },
+		{ id: 'nav-cart', title: 'Cart', section: 'Navigation', action: () => goto('/cart') },
+		{ id: 'nav-account', title: 'Account', section: 'Navigation', keywords: ['orders', 'settings'], action: () => goto('/account') },
+		{ id: 'nav-wishlist', title: 'Wishlist', section: 'Navigation', action: () => goto('/wishlist') },
+		...CATEGORIES.map((c) => ({ id: `cat-${c.id}`, title: c.name, section: 'Categories', action: () => goto(`/catalog?category=${c.id}`) })),
+		...PRODUCTS.map((p) => ({ id: `prod-${p.id}`, title: p.name, section: 'Products', keywords: p.materials, action: () => goto(`/product/${p.id}`) }))
+	];
 
 	const section = $derived.by(() => {
 		const path = page.url.pathname;
@@ -77,6 +88,12 @@
 		<gok-navbar-item href="/journal" value="journal">Journal</gok-navbar-item>
 		<gok-navbar-item href="/support" value="support">Support</gok-navbar-item>
 		<div slot="actions" class="actions">
+			<gok-command-menu
+				class="nav-search"
+				label="Search"
+				placeholder="Search"
+				{@attach setProps({ commands })}
+			></gok-command-menu>
 			<gok-menu placement="bottom-end" {@attach on('gok-select', handleMenu)}>
 				<gok-button slot="trigger" variant="secondary" accessible-label="Account menu">
 					<svg
@@ -282,6 +299,17 @@
 		display: flex;
 		align-items: center;
 		gap: var(--gok-space-200);
+	}
+
+	.nav-search {
+		--gok-command-menu-inline-size: 22rem;
+		flex: none;
+	}
+
+	@media (max-width: 64rem) {
+		.nav-search {
+			display: none;
+		}
 	}
 
 	.ico {

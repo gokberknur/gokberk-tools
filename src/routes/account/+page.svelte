@@ -43,6 +43,13 @@
 		return String(row[col.key]);
 	}
 
+	const COUNTRIES = [
+		{ value: 'se', label: 'Sweden' },
+		{ value: 'de', label: 'Germany' },
+		{ value: 'fr', label: 'France' },
+		{ value: 'uk', label: 'United Kingdom' }
+	];
+
 	// Settings state (local demo).
 	let emailUpdates = $state(true);
 	let smsUpdates = $state(false);
@@ -50,6 +57,7 @@
 
 	// Address edit dialog.
 	let editOpen = $state(false);
+	let addressCountry = $state('se');
 
 	function saveAddress() {
 		editOpen = false;
@@ -69,10 +77,7 @@
 		<gok-breadcrumb-item>Account</gok-breadcrumb-item>
 	</gok-breadcrumb>
 
-	<header class="head">
-		<p class="gok-eyebrow">Your account</p>
-		<h1 class="gok-headline-3">Workshop</h1>
-	</header>
+	<gok-page-header eyebrow="Your account" heading="Workshop"></gok-page-header>
 
 	<gok-tabs value="orders">
 		<gok-tab slot="tab" value="orders">Orders</gok-tab>
@@ -187,6 +192,7 @@
 		<gok-input label="Address line"></gok-input>
 		<gok-input label="City"></gok-input>
 		<gok-input label="Postal code"></gok-input>
+		<gok-combobox label="Country" {@attach setProps({ options: COUNTRIES, value: addressCountry })} {@attach on('change', (e) => (addressCountry = (e.target as HTMLInputElement).value))}></gok-combobox>
 	</div>
 	<div slot="footer" class="dialog-actions">
 		<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
@@ -201,9 +207,7 @@
 		padding-block: var(--gok-space-600) var(--gok-space-section-gap);
 	}
 
-	.head {
-		display: grid;
-		gap: var(--gok-space-100);
+	gok-page-header {
 		margin-block: var(--gok-space-400) var(--gok-space-600);
 	}
 

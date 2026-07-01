@@ -46,10 +46,7 @@
 		<gok-breadcrumb-item>Cart</gok-breadcrumb-item>
 	</gok-breadcrumb>
 
-	<header class="head">
-		<p class="gok-eyebrow">Your order</p>
-		<h1 class="gok-headline-3">Cart</h1>
-	</header>
+	<gok-page-header eyebrow="Your order" heading="Cart"></gok-page-header>
 
 	{#if lines.length === 0}
 		<gok-empty-state>
@@ -152,9 +149,7 @@
 		padding-block: var(--gok-space-600) var(--gok-space-section-gap);
 	}
 
-	.head {
-		display: grid;
-		gap: var(--gok-space-100);
+	gok-page-header {
 		margin-block: var(--gok-space-400) var(--gok-space-600);
 	}
 
