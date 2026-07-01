@@ -28,8 +28,6 @@
 
 	let cartOpen = $state(false);
 
-	let commandMenuEl = $state<(HTMLElement & { show?: () => void }) | null>(null);
-
 	const commands = [
 		{ id: 'nav-catalog', title: 'Catalog', section: 'Navigation', keywords: ['shop', 'tools', 'browse'], action: () => goto('/catalog') },
 		{ id: 'nav-journal', title: 'Journal', section: 'Navigation', keywords: ['blog', 'field notes'], action: () => goto('/journal') },
@@ -40,10 +38,6 @@
 		...CATEGORIES.map((c) => ({ id: `cat-${c.id}`, title: c.name, section: 'Categories', action: () => goto(`/catalog?category=${c.id}`) })),
 		...PRODUCTS.map((p) => ({ id: `prod-${p.id}`, title: p.name, section: 'Products', keywords: p.materials, action: () => goto(`/product/${p.id}`) }))
 	];
-
-	function openCommandMenu() {
-		commandMenuEl?.show?.();
-	}
 
 	const section = $derived.by(() => {
 		const path = page.url.pathname;
@@ -94,13 +88,12 @@
 		<gok-navbar-item href="/journal" value="journal">Journal</gok-navbar-item>
 		<gok-navbar-item href="/support" value="support">Support</gok-navbar-item>
 		<div slot="actions" class="actions">
-			<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-			<gok-button class="search-btn" variant="secondary" accessible-label="Search" onclick={openCommandMenu}>
-				<svg slot="icon" class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-					<circle cx="11" cy="11" r="7" />
-					<path d="M21 21l-4.3-4.3" />
-				</svg>
-			</gok-button>
+			<gok-command-menu
+				class="nav-search"
+				label="Search"
+				placeholder="Search"
+				{@attach setProps({ commands })}
+			></gok-command-menu>
 			<gok-menu placement="bottom-end" {@attach on('gok-select', handleMenu)}>
 				<gok-button slot="trigger" variant="secondary" accessible-label="Account menu">
 					<svg
@@ -249,13 +242,6 @@
 		</div>
 	</gok-drawer>
 
-	<gok-command-menu
-		bind:this={commandMenuEl}
-		label="Search"
-		placeholder="Search tools, categories, and pages…"
-		{@attach setProps({ commands })}
-	></gok-command-menu>
-
 	<gok-toast-region placement="bottom-end"></gok-toast-region>
 </div>
 
@@ -313,6 +299,17 @@
 		display: flex;
 		align-items: center;
 		gap: var(--gok-space-200);
+	}
+
+	.nav-search {
+		--gok-command-menu-inline-size: 22rem;
+		flex: none;
+	}
+
+	@media (max-width: 64rem) {
+		.nav-search {
+			display: none;
+		}
 	}
 
 	.ico {
